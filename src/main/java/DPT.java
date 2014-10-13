@@ -1,3 +1,6 @@
+/**
+ * A document, position tuple.
+ */
 public class DPT {
 	private final int document;
 	private final int position;
