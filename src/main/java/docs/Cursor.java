@@ -1,3 +1,5 @@
+package docs;
+
 public interface Cursor {
 	/**
 	 * Gets the current position of the cursor.

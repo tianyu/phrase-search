@@ -1,3 +1,5 @@
+package docs;
+
 /**
  * A document, position tuple.
  */

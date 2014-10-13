@@ -1,3 +1,5 @@
+package docs;
+
 public interface Corpus {
 
 	/**
