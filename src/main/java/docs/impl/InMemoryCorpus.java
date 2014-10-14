@@ -17,9 +17,12 @@ public class InMemoryCorpus implements Corpus {
 	public InMemoryCorpus(final Stream<Stream<String>> docs) {
 		final Builder<String, DPT> builder = ImmutableListMultimap.builder();
 		final AtomicInteger d = new AtomicInteger(0);
-		docs.forEachOrdered(doc -> {
+		docs.forEachOrdered(tokens -> {
 			final AtomicInteger p = new AtomicInteger(0);
-			doc.forEachOrdered(token ->
+			tokens
+				.map(String::trim)
+				.map(String::toLowerCase)
+				.forEachOrdered(token ->
 				builder.put(token, new DPT(d.get(), p.getAndIncrement())));
 			d.incrementAndGet();
 		});
@@ -28,7 +31,7 @@ public class InMemoryCorpus implements Corpus {
 
 	@Override
 	public Cursor find(final String token) {
-		return new InMemoryCursor(index.get(token));
+		return new InMemoryCursor(index.get(token.trim().toLowerCase()));
 	}
 
 	private static class InMemoryCursor implements Cursor {
@@ -63,6 +66,16 @@ public class InMemoryCorpus implements Corpus {
 		@Override
 		public boolean isValid() {
 			return index < dpts.size();
+		}
+
+		@Override
+		public String toString() {
+			final StringBuilder builder = new StringBuilder();
+			while (isValid()) {
+				builder.append(get()).append(' ');
+				next();
+			}
+			return builder.toString();
 		}
 	}
 }

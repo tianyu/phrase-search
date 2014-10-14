@@ -40,4 +40,9 @@ public class DPT implements Comparable<DPT> {
 	public boolean equals(final Object obj) {
 		return obj instanceof DPT && compareTo(((DPT) obj)) == 0;
 	}
+
+	@Override
+	public String toString() {
+		return String.format("(%d,%d)", document, position);
+	}
 }
