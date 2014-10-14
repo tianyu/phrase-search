@@ -6,9 +6,12 @@ import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
+import org.junit.Test;
+
 public class DoubleWordSearchTest {
 	private final Search search = new Search(TestCorpus.load("people"));
 
+	@Test
 	public void testFindTwoWords() {
 		final List<Integer> jimmiClay = search.findTwoWords("jimmi", "clay");
 		assertThat(jimmiClay, contains(4));
