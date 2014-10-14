@@ -1,4 +1,4 @@
-package docs.impl;
+package docs;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
@@ -9,12 +9,8 @@ import java.util.stream.Stream;
 
 import org.junit.Test;
 
-import docs.Corpus;
-import docs.Cursor;
-import docs.DPT;
-
-public class InMemoryCorpusTest {
-	private final Corpus corpus = new InMemoryCorpus(Stream.of(
+public class TestCorpusTest {
+	private final Corpus corpus = new TestCorpus(Stream.of(
 		Stream.of("aaa", "bbb", "aab", "bba", "bbb", "aaa")
 		, Stream.of("aab", "bbb", "aab", "bba", "bba", "bbb")
 	));

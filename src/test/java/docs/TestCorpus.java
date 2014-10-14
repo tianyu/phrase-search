@@ -1,20 +1,25 @@
-package docs.impl;
+package docs;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableListMultimap.Builder;
-import docs.Corpus;
-import docs.Cursor;
-import docs.DPT;
 
-public class InMemoryCorpus implements Corpus {
+public class TestCorpus implements Corpus {
 	private final ImmutableListMultimap<String, DPT> index;
 
-	public InMemoryCorpus(final Stream<Stream<String>> docs) {
+	public TestCorpus(final Stream<Stream<String>> docs) {
 		final Builder<String, DPT> builder = ImmutableListMultimap.builder();
 		final AtomicInteger d = new AtomicInteger(0);
 		docs.forEachOrdered(tokens -> {
@@ -76,6 +81,29 @@ public class InMemoryCorpus implements Corpus {
 				next();
 			}
 			return builder.toString();
+		}
+	}
+
+	public static Corpus load(String dir) {
+		final Pattern nonToken = Pattern.compile("[^\\w]+");
+		try {
+			final URL url = TestCorpus.class.getResource("/" + dir);
+			if (url == null) throw new Error("Resource \"" + dir + "\" is not available.");
+			final Path path = Paths.get(url.toURI());
+			final Stream<Stream<String>> docs = StreamSupport
+				.stream(Files.newDirectoryStream(path, "*.txt").spliterator(), false)
+				.map(doc -> {
+					try {
+						return Files.newBufferedReader(doc)
+							.lines()
+							.flatMap(nonToken::splitAsStream);
+					} catch (IOException e) {
+						throw new UncheckedIOException(e);
+					}
+				});
+			return new TestCorpus(docs);
+		} catch (Exception e) {
+			throw new Error("Error retrieving corpus files.", e);
 		}
 	}
 }
