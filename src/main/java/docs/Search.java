@@ -1,5 +1,6 @@
 package docs;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Search {
@@ -15,6 +16,12 @@ public class Search {
 	 * @return A list of all document numbers containing a word.
 	 */
 	public List<Integer> findWord(String word) {
-		return null;
+		final List<Integer> docs = new ArrayList<>();
+		final Cursor cursor = corpus.find(word);
+		while (cursor.isValid()) {
+			docs.add(cursor.get().getDocument());
+			cursor.seek(new DPT(cursor.get().getDocument() + 1, 0));
+		}
+		return docs;
 	}
 }
