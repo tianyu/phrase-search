@@ -5,12 +5,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.Test;
 
-import com.google.common.collect.Lists;
 import docs.Corpus;
 import docs.Cursor;
 import docs.DPT;
@@ -53,17 +51,12 @@ public class InMemoryCorpusTest {
 	}
 
 	private static void assertCursor(Cursor cursor, DPT... dpts) {
+		boolean valid = cursor.isValid();
 		for (DPT dpt : dpts) {
-			assertTrue(cursor.isValid());
+			assertTrue(valid);
 			assertThat(cursor.get(), is(dpt));
-			cursor.next();
+			valid = cursor.next();
 		}
-		assertFalse(cursor.isValid());
-	}
-
-	public List<DPT> toList(Cursor cursor) {
-		final List<DPT> dpts = Lists.newArrayList();
-		while (cursor.isValid()) dpts.add(cursor.get());
-		return dpts;
+		assertFalse(valid);
 	}
 }
